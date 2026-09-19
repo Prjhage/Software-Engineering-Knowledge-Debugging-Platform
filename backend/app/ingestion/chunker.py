@@ -19,9 +19,9 @@ from .file_classifier import FileClassifier
 
 logger = logging.getLogger(__name__)
 
-CHUNK_SIZE = 800
-CHUNK_OVERLAP = 100
-MAX_CHUNK_SIZE = 2000  # hard cap per chunk
+CHUNK_SIZE = 1200
+CHUNK_OVERLAP = 150
+MAX_CHUNK_SIZE = 4500  # allow full functions up to ~120 lines without splitting
 
 
 def _split_text_fallback(text: str, max_size: int = CHUNK_SIZE) -> list[str]:

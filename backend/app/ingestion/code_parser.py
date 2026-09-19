@@ -78,14 +78,35 @@ def parse_javascript(content: str, file_path: str) -> list[dict]:
                     name = _extract_node_text(child, source_bytes)
                     break
 
-            # For arrow functions assigned to variables: look at parent
-            if not name and node.parent and node.parent.type == "variable_declarator":
-                for child in node.parent.children:
-                    if child.type == "identifier":
-                        name = _extract_node_text(child, source_bytes)
-                        break
+            # For arrow functions or expressions assigned to variables, module.exports, or object pairs
+            if not name and node.parent:
+                if node.parent.type == "variable_declarator":
+                    for child in node.parent.children:
+                        if child.type == "identifier":
+                            name = _extract_node_text(child, source_bytes)
+                            break
+                elif node.parent.type == "assignment_expression":
+                    left = node.parent.children[0]
+                    if left.type == "member_expression":
+                        for child in reversed(left.children):
+                            if child.type in ("property_identifier", "identifier"):
+                                name = _extract_node_text(child, source_bytes)
+                                break
+                    elif left.type == "identifier":
+                        name = _extract_node_text(left, source_bytes)
+                elif node.parent.type == "pair":
+                    key_node = node.parent.children[0]
+                    if key_node.type in ("property_identifier", "identifier", "string"):
+                        name = _extract_node_text(key_node, source_bytes).strip("\"'")
 
             code = _extract_node_text(node, source_bytes)
+            # If function is part of an assignment expression, include the assignment signature
+            if node.parent and node.parent.type == "assignment_expression" and name:
+                left_text = _extract_node_text(node.parent.children[0], source_bytes)
+                code = f"{left_text} = {code}"
+            elif node.parent and node.parent.type == "variable_declarator" and name:
+                code = f"const {name} = {code}"
+
             docstring = _get_leading_comment(node, source_bytes)
 
             if len(code.strip()) > 10:  # skip trivial nodes
