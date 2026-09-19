@@ -40,6 +40,23 @@ html, body {
   overflow: hidden;
 }
 
+/* ── Global Interactive Cursors ── */
+button,
+[role="button"],
+[type="button"],
+[type="submit"],
+[type="reset"],
+summary,
+a {
+  cursor: pointer !important;
+}
+
+button:disabled,
+[type="button"]:disabled,
+[type="submit"]:disabled {
+  cursor: not-allowed !important;
+}
+
 /* ── Custom Scrollbars ── */
 ::-webkit-scrollbar {
   width: 6px;

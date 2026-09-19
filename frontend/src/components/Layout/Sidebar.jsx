@@ -108,22 +108,7 @@ export default function Sidebar({ onSelectPrompt }) {
         </div>
       </div>
 
-      {/* System Status Footer */}
-      <div className="p-3 border-t border-white/5 bg-[#070b16]">
-        <div className="px-2 py-1.5 rounded-lg bg-white/[0.02] border border-white/5 space-y-1.5">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-slate-400 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Engine Online
-            </span>
-            <span className="font-mono text-slate-500 text-[10px]">Port 8000</span>
-          </div>
-          <div className="flex items-center justify-between text-[10px] text-slate-500">
-            <span>Vector Index: ChromaDB</span>
-            <span>Rerank: BM25</span>
-          </div>
-        </div>
-      </div>
+
     </aside>
   );
 }
